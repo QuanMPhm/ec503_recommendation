@@ -18,11 +18,14 @@ if __name__ == '__main__':
             pass
             xx=1
 
+
         actionC = random.rand()
         if i<=explore_phase_size:
             e_greedy = e_greedy_phase1
         else:
             e_greedy = e_greedy_phase2
+
+        # Decide whether or not to explore or pick current optimal value
         if actionC <= e_greedy:
             action = np.argmax(mab.Q)
         else:
@@ -36,6 +39,7 @@ if __name__ == '__main__':
             print()
             x=int(i/500)
             ccr[x] = mab.pull[9]/i
+            
     plt.figure()
     ccr_x = range(int(iter_size/sample_size))
     plt.plot(ccr_x,ccr)

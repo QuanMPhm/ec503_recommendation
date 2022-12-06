@@ -1,1 +1,5 @@
-please run the main file
+main.py - Contains the code to run the experiment
+produce_dataset.py - Contains code to simulate an audience, will need much more improvement 
+RL_brain.py - Implements a DQN "Off-policy", not sure what that means
+    - How might we play around with the parameters of this model?
+    

@@ -14,3 +14,5 @@ The only differences between 'Data_Generator_news.py' and 'Data_Generator.py' an
 are based on the MIND, the others are based on the 'IMDB'
 
 Run the main file
+
+What is the problem to be solved, explain how the models work, what is the dataset and its characteristics?

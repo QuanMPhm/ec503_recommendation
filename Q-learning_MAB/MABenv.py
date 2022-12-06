@@ -6,10 +6,14 @@ class MAB:
         self.Q = np.zeros(numOfMAB)
         #self.win = np.arange(numOfMAB)/numOfMAB
         #self.win = np.array([0.1,0.2,0.3,0.2,0.1,0.2,0.4,0.3,0.4,0.8])
+
+        # Hard coded winning probabilities :((
         self.win = np.array([0.1,0.2,0.3,0.2,0.1,0.2,0.4,0.3,0.7,0.8])
 
+        # Counter of number of pulls for each machine
         self.pull = np.zeros(numOfMAB)
-        self.alpha = 0.
+        # Unused??
+        self.alpha = 0. 
         self.lr = learning_rate
         self.rd = reward_decay
 
@@ -25,4 +29,5 @@ class MAB:
 
 
     def learn(self,a,s=1,r=0.0,s_=1):
-        self.Q[a] += self.lr*(r + self.rd*max(self.Q) - self.Q[a])
+        # This equation...
+        self.Q[a] += self.lr * (r + self.rd*max(self.Q) - self.Q[a])

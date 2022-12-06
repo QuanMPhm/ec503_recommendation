@@ -1,5 +1,3 @@
 import numpy as np
-x = np.arange(10)
-
-y = np.argmin(x)
-print(y)
+ccr = np.zeros(int(50))
+print(ccr)
