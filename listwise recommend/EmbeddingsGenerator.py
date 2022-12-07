@@ -35,6 +35,7 @@ class EmbeddingsGenerator:
             self.user_movies[userId] = self.data[self.data.userId == userId]['itemId'].tolist()
         self.m = self.model()
 
+    # Function that defines a model that can tell what's the missing movie rating
     def model(self, hidden_layer_size=100):
         m = Sequential()
         m.add(Dense(hidden_layer_size, input_shape=(1, self.movie_count)))
@@ -68,14 +69,19 @@ class EmbeddingsGenerator:
         '''
         # xtrain_writer = open('test_data/xtrain_data')
         # ytrain_writer = open('test_data/ytrain_data')
+
+        # For each epoch...
         for i in range(nb_epochs):
             print('%d/%d' % (i + 1, nb_epochs))
+            # Randomly Select 10000 users, for each get their rating history randomly remove one rating
             batch = [self.generate_input(user_id=np.random.choice(self.train_users) - 1) for _ in range(batch_size)]
-            X_train = np.array([b[0] for b in batch])
-            y_train = np.array([b[1] for b in batch])
+            X_train = np.array([b[0] for b in batch]) # Context
+            y_train = np.array([b[1] for b in batch]) # Target, the one index randomly removed
             # xtrain_writer.write([b[0] for b in batch])
 
+            # Training a neural network to be able to tell what's the missing rating given a user's rating history???!?!?!?
             np.set_printoptions(threshold=np.inf)
+
             self.m.fit(X_train, y_train, epochs=1, validation_split=0.5)
 
     def test(self, test_users, batch_size=100000):
@@ -98,6 +104,7 @@ class EmbeddingsGenerator:
         # append embeddings to vectors
         vectors = []
         # for movie_id in range(self.movie_count):
+        # Why remove 1600 movies?
         for movie_id in range(self.movie_count - 1600):
 
             movie = np.zeros((1, 1, self.movie_count))
@@ -105,22 +112,29 @@ class EmbeddingsGenerator:
             print('movie!!!!!!!!!\n')
             aaa = ' '.join(str(e) for e in movie)
             txt_writer2.write(aaa)
+
+            # movie is a 1x1x1600 array with 1 1
+            # Get some random shit
             layer_outs = functor([movie])
             print(layer_outs)
             txt_writer.write('testt')
             txt_writer.write('\n')
             aaa = ' '.join(str(e) for  e in layer_outs)
+            # Write some random shit
             txt_writer.write(aaa)
             txt_writer.write('\n')
 
             vector = [str(v) for v in layer_outs[0][0][0]]
             vector = '|'.join(vector)
+
+            # Our embedding is some random shit
             vectors.append([movie_id, vector])
             txt_writer3.write('testt')
             txt_writer3.write('\n')
             aaa = ' '.join(str(e) for  e in vector)
             txt_writer3.write(aaa)
             txt_writer3.write('\n')
+
         # saves as a csv file
         embeddings = pd.DataFrame(vectors, columns=['item_id', 'vectors']).astype({'item_id': 'int32'})
         embeddings_csv = embeddings.to_csv(file_name, sep=';', index=False)

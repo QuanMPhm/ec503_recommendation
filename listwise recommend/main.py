@@ -124,7 +124,7 @@ data = read_file('train.csv')
 # embeddings
 embeddings = Embeddings(read_embeddings('embeddings.csv'))
 state_space_size = embeddings.size() * history_length
-action_space_size = embeddings.size() * ra_length
+action_space_size = embeddings.size() * ra_length # ??? We have a action space of 4???
 
 
 
@@ -155,6 +155,7 @@ def state_to_items(state, actor, ra_length, embeddings, dict_embeddings, target=
 
 txt_writer = open('state',mode='w')
 
+# Testing the actor? Given actor, embeddings, 
 def test_actor(actor, test_df, embeddings, dict_embeddings, ra_length, history_length, target=False, nb_rounds=1):
   ratings = []
   unknown = 0

@@ -69,9 +69,9 @@ class DataGenerator():
 
         # datapath = 'Preprocess_MIND/csv_trans'
         # itempath = 'Preprocess_MIND/item_csv'
-        data = pd.read_csv(datapath, sep=' ',
+        data = pd.read_csv(datapath, sep='\t',
                            names=['userId', 'itemId', 'rating', 'timestamp'])
-        movie_titles = pd.read_csv(itempath, sep=',', names=['itemId', 'itemName'],
+        movie_titles = pd.read_csv(itempath, sep='|', names=['itemId', 'itemName'],
                                    usecols=range(2), encoding='latin-1')
 
         return data.merge(movie_titles, on='itemId', how='left')
