@@ -1,7 +1,4 @@
-unknown|0
-weird|99
-love|99
-nothing|99
+weird|0
 Action|1
 Adventure|2
 Animation|3
@@ -15,7 +12,7 @@ Noir|10
 Horror|11
 Musical|12
 Mystery|13
-Romance|14
+love|14
 Fiction|15
 Thriller|16
 War|17
