@@ -1,0 +1,2 @@
+run the "main_test2" file to start
+change the "# todo: change parameters below" part to change the model structure, initial method, action space range and reward function
