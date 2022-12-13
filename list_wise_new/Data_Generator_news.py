@@ -216,9 +216,9 @@ class DataGenerator():
                           ratio form which movies in history will be selected
         max_samp_by_user: int, optional
                           Nulber max of sample to make by user
-        max_state :       int, optional
+        max_state :       int, optional ???
                           Number max of movies to take for the 'state' column
-        max_action :      int, optional
+        max_action :      int, optional ???
                           Number max of movies to take for the 'action' action
         nb_states :       array(int), optional
                           Numbers of movies to be taken for each sample made on user's historic

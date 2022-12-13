@@ -3,6 +3,8 @@ from numpy import random
 from MABenv import MAB
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import matplotlib.pyplot as plt
+
+
 e_greedy_phase1 = 0.5
 e_greedy_phase2 = 0.98
 
@@ -39,6 +41,8 @@ if __name__ == '__main__':
             print()
             x=int(i/500)
             ccr[x] = mab.pull[9]/i
+
+            
             
     plt.figure()
     ccr_x = range(int(iter_size/sample_size))

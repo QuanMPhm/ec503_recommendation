@@ -20,15 +20,15 @@ class Actor():
     def __init__(self, sess, state_space_size, action_space_size, batch_size, ra_length, history_length, embedding_size,
                  tau, learning_rate, scope='actor'):
         self.sess = sess
-        self.state_space_size = state_space_size
-        self.action_space_size = action_space_size
-        self.batch_size = batch_size
-        self.ra_length = ra_length
-        self.history_length = history_length
-        self.embedding_size = embedding_size
-        self.tau = tau
-        self.learning_rate = learning_rate
-        self.scope = scope
+        self.state_space_size = state_space_size # Size of each state
+        self.action_space_size = action_space_size # Size of each action
+        self.batch_size = batch_size # Batch size???
+        self.ra_length = ra_length # How many items to reconmend
+        self.history_length = history_length # Length of user's history, how is it used???!?!
+        self.embedding_size = embedding_size # Size of each embedding?
+        self.tau = tau # tau, parameter for gradient descent
+        self.learning_rate = learning_rate 
+        self.scope = scope # Scope?
 
         with tf.variable_scope(self.scope):
             # Build Actor network

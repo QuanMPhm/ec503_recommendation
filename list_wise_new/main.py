@@ -97,6 +97,50 @@ def experience_replay(replay_memory, batch_size, actor, critic, embeddings, ra_l
     return np.amax(critic_Q_value), critic_loss
 
 
+# ???
+def state_to_items(state, actor, ra_length, embeddings, dict_embeddings, target=False):
+  return [dict_embeddings[str(action)]
+          for action in
+          actor.get_recommendation_list(ra_length, np.array(state).reshape(1, -1), embeddings, target).reshape(
+              ra_length, embeddings.size())]
+
+txt_writer = open('state',mode='w')
+
+# ???
+def test_actor(actor, test_df, embeddings, dict_embeddings, ra_length, history_length, target=False, nb_rounds=1):
+  ratings = [] # List of ratings for our reconmendations, which are "very true" since they're from user history
+  unknown = 0 # Number of reconmendations which we don't know the ratings for
+  random_seen = [] # Contains ratings for the history samples of users, or ratings for the "state"
+
+  # For nb_round number of rounds
+  for _ in range(nb_rounds):
+      # For each user's rating history
+      for i in range(len(test_df)):
+          # Sample some ratings in the past for user
+          history_sample = list(test_df[i].sample(history_length)['itemId'])
+
+          # Get the reconmendations, size 4
+          # What is target???
+          recommendation = state_to_items(embeddings.embed(history_sample), actor, ra_length, embeddings,
+                                          dict_embeddings, target)
+
+          # Find all movies that the user has rated that are in the reconmendations
+		  # For each movie, if user rated it, append its rating, else add to unknown
+          for item in recommendation:
+              l = list(test_df[i].loc[test_df[i]['itemId'] == item]['rating'])
+              assert (len(l) < 2)
+              if len(l) == 0:
+                  unknown += 1
+              else:
+                  ratings.append(l[0])
+
+			# Wouldn't this be true for every item?
+          for item in history_sample:
+              random_seen.append(list(test_df[i].loc[test_df[i]['itemId'] == item]['rating'])[0])
+
+  return ratings, unknown, random_seen
+
+
 # Hyperparameters
 # Hyperparameters
 history_length = 12 # N in article
@@ -124,10 +168,14 @@ data = read_file('train.csv')
 
 # embeddings
 embeddings = Embeddings(read_embeddings('embeddings.csv'))
-state_space_size = embeddings.size() * history_length
-action_space_size = embeddings.size() * ra_length
+state_space_size = embeddings.size() * history_length # The size of each state
+action_space_size = embeddings.size() * ra_length # The size of each action
 
-
+dict_embeddings = {}
+for i, item in enumerate(embeddings.get_embedding_vector()):
+  str_item = str(item)
+  assert(str_item not in dict_embeddings)
+  dict_embeddings[str_item] = i
 
 environment = Environment(data, embeddings, alpha, gamma, fixed_length)
 
@@ -137,45 +185,6 @@ sess = tf.Session()
 # '1: Initialize actor network f_θ^π and critic network Q(s, a|θ^µ) with random weights'
 actor = Actor(sess, state_space_size, action_space_size, batch_size, ra_length, history_length, embeddings.size(), tau, actor_lr)
 critic = Critic(sess, state_space_size, action_space_size, history_length, embeddings.size(), tau, critic_lr)
-
-
-
-
-dict_embeddings = {}
-for i, item in enumerate(embeddings.get_embedding_vector()):
-  str_item = str(item)
-  assert(str_item not in dict_embeddings)
-  dict_embeddings[str_item] = i
-
-
-def state_to_items(state, actor, ra_length, embeddings, dict_embeddings, target=False):
-  return [dict_embeddings[str(action)]
-          for action in
-          actor.get_recommendation_list(ra_length, np.array(state).reshape(1, -1), embeddings, target).reshape(
-              ra_length, embeddings.size())]
-
-txt_writer = open('state',mode='w')
-
-def test_actor(actor, test_df, embeddings, dict_embeddings, ra_length, history_length, target=False, nb_rounds=1):
-  ratings = []
-  unknown = 0
-  random_seen = []
-  for _ in range(nb_rounds):
-      for i in range(len(test_df)):
-          history_sample = list(test_df[i].sample(history_length)['itemId'])
-          recommendation = state_to_items(embeddings.embed(history_sample), actor, ra_length, embeddings,
-                                          dict_embeddings, target)
-          for item in recommendation:
-              l = list(test_df[i].loc[test_df[i]['itemId'] == item]['rating'])
-              assert (len(l) < 2)
-              if len(l) == 0:
-                  unknown += 1
-              else:
-                  ratings.append(l[0])
-          for item in history_sample:
-              random_seen.append(list(test_df[i].loc[test_df[i]['itemId'] == item]['rating'])[0])
-
-  return ratings, unknown, random_seen
 
 
 saver = tf.train.Saver()

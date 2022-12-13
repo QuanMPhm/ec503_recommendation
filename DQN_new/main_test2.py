@@ -1,6 +1,6 @@
 from produce_dataset_cosine import generateSet
 from RL_brain_test import DeepQNetwork_test
-from run_me import DQN_test
+# from run_me import DQN_test
 import math
 import numpy as np
 import tensorflow as tf2
@@ -47,9 +47,10 @@ episode_size = 20
 epsilon = 0.15  # if the preference of the predicted choice is around the range of 0.15 of the best one, take it as a good prediction
 max_ccr = 0
 
+# Get preference for test set
 def def_test_preference():
     global test_preference
-    test_preference = np.zeros(numOfPerson, numOfMAB)
+    test_preference = np.zeros((numOfPerson, numOfMAB))
     if init_method == 'like&hate':
         for i in range(numOfPerson):
             index_like = np.random.randint(1, env.MAB, [1, number_he_like])
@@ -132,7 +133,7 @@ def run_recommend(iter_batch,env,RL):
             # fresh env
             # todo
 
-            # RL choose action based on observation
+            # RL choose action based on observation, currently user's preference array
             action,actions_value = RL.choose_action(s)
 
             # RL take action and get next observation and reward
@@ -143,6 +144,7 @@ def run_recommend(iter_batch,env,RL):
             #print('cosine_similarity out:',cosine_similarity)
             RL.store_transition(s, action, reward, s_ = np.array(env.preference[chosen_person,:]).flatten() )
 
+            # Every 5 step, learn???
             if (step > 0) and (step % 5 == 0):
                 RL.learn()
 
@@ -181,7 +183,7 @@ def plot_CCR():
 if __name__ == '__main__':
     env = generateSet(numOfPerson= numOfPerson,numOfMAB=numOfMAB,number_he_like=number_he_like,method=init_method,reward_method=reward_methods)
     def_test_preference()
-    test_agent = DQN_test()
+    # test_agent = DQN_test() # Why do we have a test agent and train agent??? Not used???
     tf.reset_default_graph()
     RL = DeepQNetwork(env.MAB, env.MAB,
                       learning_rate=0.01,

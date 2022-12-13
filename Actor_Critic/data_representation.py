@@ -16,7 +16,7 @@ f_dataset = open("IMDB_dataset/u.data", "r")
 f_demo = open("IMDB_dataset/u.user", "r")
 f_movies = open("IMDB_dataset/u.item", "r")
 f_genre_names = open("IMDB_dataset/u.copy.genre", "r") # The modified genre names
-f_orig_embeddings = open("listwise recommend/embeddings.csv")
+# f_orig_embeddings = open("listwise recommend/embeddings.csv")
 
 genre_names = list()
 embed_genre = dict()
@@ -28,17 +28,17 @@ with open("genre_embed.pickle", 'rb') as f:
 with open("IMDB_embed.pickle", 'rb') as f:
     embed_titles = pickle.load(f)
 
-# Read in shitty embeddings
-embed_orig = list()
-line = f_orig_embeddings.readline() # Skip first line
-line = f_orig_embeddings.readline()
-while line:
-    line = line.split(";")
-    movie_embedding = line[1].split("|")
-    movie_embedding = [float(i) for i in movie_embedding]
-    embed_orig.append([int(line[0]), movie_embedding])
-    line = f_orig_embeddings.readline()
-f_orig_embeddings.close()
+# # Read in shitty embeddings
+# embed_orig = list()
+# line = f_orig_embeddings.readline() # Skip first line
+# line = f_orig_embeddings.readline()
+# while line:
+#     line = line.split(";")
+#     movie_embedding = line[1].split("|")
+#     movie_embedding = [float(i) for i in movie_embedding]
+#     embed_orig.append([int(line[0]), movie_embedding])
+#     line = f_orig_embeddings.readline()
+# f_orig_embeddings.close()
 
 # Get all genre names
 line = f_genre_names.readline()
@@ -247,9 +247,13 @@ def step_w2v(s, a, r, n):
 
 
 embed_size = 300
+raw_size = n_genres + 2
 s = list()
+# for i in range(10):
+#     s.append([0] * (1 + embed_size + 1))
+
 for i in range(10):
-    s.append([0] * (1 + embed_size + 1))
+    s.append([0] * raw_size)
 
 
-print(step_w2v(s, 300, 4, 10))
+print(step_no_udata(s, 300, 4, 10))

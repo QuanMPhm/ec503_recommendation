@@ -11,6 +11,8 @@ class generateSet:
         self.sparse = 0.8   # may not click the content that did attract user
         self.reward_method = reward_method
 
+    # Different methods of initializations
+    # Neat 
     def randPreference(self,method = 'random'):
         if method == 'random':
             for i in range(self.person):
@@ -18,6 +20,7 @@ class generateSet:
                     self.preference[i, j] = np.random.rand()
         elif method == 'like&hate':
             for i in range(self.person):
+                # TODO: Wouldn't this result in duplicates?
                 index_like = np.random.randint(1, self.MAB,[1,self.number_he_like])
                 for j in range(self.number_he_like):
                     self.preference[i,index_like[0][j]] = np.random.randint(math.floor(0.9*self.MAB*10),self.MAB*10)/(self.MAB*10)
